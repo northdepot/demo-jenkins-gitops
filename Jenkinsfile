@@ -1,17 +1,25 @@
+library identifier: 'RHTAP_Jenkins@main', retriever: modernSCM(
+  [$class: 'GitSCMSource',
+   remote: 'https://github.com/redhat-appstudio/tssc-sample-jenkins.git'])
+
 pipeline { 
     agent any
     stages {
         stage('Compute Image Changes') {
             steps {
-                echo 'Compute Image Changes' 
-                sh "rhtap/gather-deploy-images.sh"  
+                script { 
+                    rhtap.info ("Compute Image Changes")
+                    rhtap.gather_deploy_images() 
+                }
             }
-        }
+        }  
         stage('verify EC') {
             steps {
-                echo 'Validate Enteprise Contract.' 
-                sh "rhtap/verify-enterprise-contract.sh"  
-            }
+                script { 
+                    rhtap.info ("Validate Enteprise Contract")
+                    rhtap.verify_enterprise_contract() 
+                }
+            } 
         }  
     }
 }
